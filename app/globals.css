@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  /* Primary Colors - Trust & Intelligence */
+  --primary: #4F46E5;        /* Confident indigo - promotes trust & wisdom */
+  --primary-dark: #3730A3;   /* Darker indigo for hover states */
+  --primary-light: #818CF8;  /* Lighter indigo for accents */
+  
+  /* Secondary Colors - Energy & Creativity */
+  --secondary: #F59E0B;      /* Warm amber - friendly & energetic */
+  --secondary-dark: #D97706; /* Darker amber for contrast */
+  
+  /* Accent Colors - Freshness & Growth */
+  --accent: #10B981;         /* Vibrant green - growth & success */
+  --accent-light: #34D399;   /* Lighter green for highlights */
+  
+  /* Neutral Colors - Professional & Clean */
+  --text-primary: #1F2937;   /* Dark gray for excellent readability */
+  --text-secondary: #6B7280; /* Medium gray for secondary text */
+  --bg-primary: #F9FAFB;     /* Soft white background */
+  --bg-secondary: #F3F4F6;   /* Light gray for section backgrounds */
+  --card-bg: #FFFFFF;        /* Pure white for content cards */
+  --border: #E5E7EB;         /* Subtle borders */
+  
+  /* Feedback Colors */
+  --success: #10B981;        /* Green for success messages */
+  --error: #EF4444;          /* Red for errors - kept for consistency */
+  --warning: #F59E0B;        /* Amber for warnings */
+  --info: #3B82F6;           /* Blue for information */
+}
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.primary-text {
+  color: var(--text-primary);
+}
+
+.secondary-text {
+  color: var(--text-secondary);
+}
+
+.primary-text-hover:hover {
+  color: var(--primary-dark);
+}
+
+.card-bg {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+.bg-btn {
+  background-color: var(--primary);
+  color: white;
+}
+
+.bg-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.bg-btn-secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.bg-btn-secondary:hover {
+  background-color: var(--secondary-dark);
+}
+
+.bg-btn-accent {
+  background-color: var(--accent);
+  color: white;
+}
+
+.bg-btn-accent:hover {
+  background-color: var(--accent-light);
+}
+
+.header_img {
+  background: linear-gradient(rgba(79, 70, 229, 0.6), rgba(79, 70, 229, 0.6)), url('https://images.pexels.com/photos/12610210/pexels-photo-12610210.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+/* Additional utility classes for the new palette */
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-accent-light {
+  background-color: var(--accent-light);
+}
+
+.border-primary {
+  border-color: var(--primary-light);
+}
