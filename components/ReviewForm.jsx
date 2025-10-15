@@ -26,7 +26,7 @@ export default function ReviewForm({ resourceId, onReviewSubmit }) {
       }
     });
 
-    // Cleanup subscription on unmount
+    // Cleanup subscription on unmounts
     return () => unsubscribe();
   }, []);
 
