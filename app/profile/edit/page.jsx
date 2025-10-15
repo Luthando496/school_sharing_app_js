@@ -18,7 +18,6 @@ export default function EditProfilePage() {
     studentName: "",
     studentSurname: "",
   });
-  const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
   const { logout } = useUserStore((state) => state);
@@ -30,7 +29,6 @@ export default function EditProfilePage() {
       } else {
         router.push("/login");
       }
-      setLoading(false);
     });
     return () => unsubscribe();
   }, [router]);
@@ -78,17 +76,7 @@ export default function EditProfilePage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
-        </div>
-      </div>
-    );
-  }
-
+ 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4">

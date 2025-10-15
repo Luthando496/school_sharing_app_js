@@ -191,6 +191,7 @@ export async function uploadBlog(formData,user) {
       contentLength: content?.length,
       authorId,
       imageSize: imageFile?.size,
+      author:user
     });
 
     if (!title || !subtitle || !slug || !content || !authorId) {

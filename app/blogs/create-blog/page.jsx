@@ -147,7 +147,7 @@ export default function WriteBlogPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        setUser(currentUser?.uid);
+        setUser(currentUser?.displayName);
       } else {
         // Fallback for router.push("/login")
         if (typeof window !== 'undefined') {
@@ -286,6 +286,8 @@ export default function WriteBlogPage() {
 
     setIsUploading(false);
   };
+
+  console.log("MY USER FROM BLOG PAGES_DIR_ALIAS",user)
 
 
   return (
