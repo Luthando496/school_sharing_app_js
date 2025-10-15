@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { storage, db } from "@/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc,getDocs } from "firebase/firestore";
 
 
 
@@ -173,41 +173,119 @@ export async function uploadDocument(formData) {
 
 
 
+export async function uploadBlog(formData,user) {
+  console.log("Starting blog upload process...");
 
-
-
-export async function uploadBlog(formData) {
   try {
     const title = formData.get("title");
     const subtitle = formData.get("subtitle");
     const slug = formData.get("slug");
     const content = formData.get("content");
-    const authorId = formData.get("authorId");
+    const authorId = user
     const imageFile = formData.get("image");
 
-    let imageUrl = null;
-    if (imageFile) {
-      const storageRef = ref(storage, `blogs/${authorId}/${slug}/cover_${Date.now()}.${imageFile.name.split('.').pop()}`);
-      const snapshot = await uploadBytes(storageRef, imageFile);
-      imageUrl = await getDownloadURL(snapshot.ref);
-    }
-
-    const blogData = {
+    console.log("Blog data:", {
       title,
       subtitle,
       slug,
-      content,
+      contentLength: content?.length,
       authorId,
+      imageSize: imageFile?.size,
+    });
+
+    if (!title || !subtitle || !slug || !content || !authorId) {
+      console.log(`Title-${title}, subtitle-${subtitle}, slug-${slug}, content-${content}, and author ID-${authorId} are required` )
+      return { error: "Title, subtitle, slug, content, and author ID are required" };
+    }
+
+    // Validate image file if provided
+    const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"];
+    let imageUrl = null;
+    if (imageFile && imageFile.size > 0) {
+      if (!allowedImageTypes.includes(imageFile.type)) {
+        return { error: "Blog cover image must be a JPEG, PNG, or GIF" };
+      }
+      if (imageFile.size > 5 * 1024 * 1024) {
+        return { error: "Image file size must be less than 5MB" };
+      }
+
+      console.log("Uploading blog cover image to Firebase Storage...");
+      const timestamp = Date.now();
+      const imageExtension = imageFile.name.split('.').pop();
+      const sanitizedImageName = imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const imageFileName = `cover_${timestamp}_${sanitizedImageName}`;
+      const imageStorageRef = ref(storage, `blog_covers/${authorId}/${slug}/${imageFileName}`);
+
+      const imageArrayBuffer = await imageFile.arrayBuffer();
+      const imageBuffer = new Uint8Array(imageArrayBuffer);
+
+      const imageSnapshot = await uploadBytes(imageStorageRef, imageBuffer, {
+        contentType: imageFile.type,
+      });
+
+      imageUrl = await getDownloadURL(imageSnapshot.ref);
+      console.log("Image upload successful:", imageUrl);
+    }
+
+    console.log("Saving blog metadata to Firestore...");
+    const blogId = `${authorId}_${slug}_${Date.now()}`;
+    const blogRef = doc(db, "blogs", blogId);
+
+    await setDoc(blogRef, {
+      id: blogId,
+      title: title.trim(),
+      subtitle: subtitle.trim(),
+      slug: slug.trim(),
+      content: content,
+      authorId: authorId,
+      imageUrl: imageUrl || null,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+
+    console.log("Metadata saved successfully. Blog ID:", blogId);
+
+    // Revalidate cache for updated blog list (adjust path as needed)
+    revalidatePath("/blogs");
+
+    return { 
+      success: true, 
+      id: blogId, 
       imageUrl,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      message: "Blog posted successfully!" 
     };
 
-    const docRef = await addDoc(collection(db, "blogs"), blogData);
-
-    return { success: true, id: docRef.id };
   } catch (error) {
-    console.error("Error uploading blog:", error);
-    return { success: false, error: error.message };
+    console.error("Upload error details:", error);
+
+    if (error instanceof Error) {
+      if (error.message.includes('storage/unauthorized')) {
+        return { error: "You don't have permission to upload files. Please check your authentication." };
+      } else if (error.message.includes('storage/quota-exceeded')) {
+        return { error: "Storage quota exceeded. Please try again later." };
+      } else if (error.message.includes('storage/retry-limit-exceeded')) {
+        return { error: "Upload timeout. Please check your internet connection and try again." };
+      } else if (error.message.includes('firestore')) {
+        return { error: "Failed to save blog information. Please try again." };
+      }
+    }
+
+    return { error: "Upload failed. Please check your internet connection and try again." };
+  }
+}
+
+
+// lib/firebase/blogs.js
+export async function getAllBlogs() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "blogs"));
+    const blogsData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return blogsData;
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return [];
   }
 }

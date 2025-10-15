@@ -70,6 +70,11 @@ export default function RootLayout({ children }) {
                   Resources
                 </Link>
               </li>
+              <li className="px-4 py-2 rounded-2xl hover:bg-[#3730A3] hover:text-white"> 
+                <Link href='/blogs' className="primary-text md:text-lg lg:text-xl font-semibold cursor-pointer duration-300">
+                  blogs
+                </Link>
+              </li>
               <li className="px-4 py-2 rounded-2xl hover:bg-[#3730A3] hover:text-white">
                 <Link href='/upload-resources' className="primary-text md:text-lg lg:text-xl font-semibold cursor-pointer duration-300">
                   Upload Document

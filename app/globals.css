@@ -29,6 +29,19 @@
   --info: #3B82F6;           /* Blue for information */
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
 .bg-primary {
   background-color: var(--bg-primary);
 }
@@ -100,4 +113,17 @@
 
 .border-primary {
   border-color: var(--primary-light);
+}
+
+.prose {
+  @apply max-w-none;
+}
+.prose h1 {
+  @apply text-2xl font-bold mb-4;
+}
+.prose p {
+  @apply mb-4;
+}
+.prose ul {
+  @apply list-disc pl-5 mb-4;
 }

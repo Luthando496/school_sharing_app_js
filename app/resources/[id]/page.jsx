@@ -15,6 +15,11 @@ import { getPostById, getRelatedPosts } from "@/actions/resources";
 import Image from "next/image";
 import LoadingPage from "../loading";
 
+// Import the new components we created
+import StarRatingDisplay from "@/components/StarRatingDisplay"; // Adjust path if needed
+import ReviewForm from "@/components/ReviewForm"; // Adjust path if needed
+import ReviewsList from "@/components/ReviewsList"; // Adjust path if needed
+
 export default function ResourceDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -23,27 +28,31 @@ export default function ResourceDetailPage() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const idParam = params?.id;
-        const singlePost = await getPostById(idParam);
-        setResource(singlePost);
+  // We wrap the data fetching logic in a function to make it reusable
+  const fetchResource = async () => {
+    try {
+      const idParam = params?.id;
+      if (!idParam) return;
 
-        if (singlePost?.category && singlePost?.id) {
-          const related = await getRelatedPosts(
-            singlePost.category,
-            singlePost.id
-          );
-          setRelatedResources(related);
-        }
-      } catch (error) {
-        console.error("Failed to fetch resource:", error);
-      } finally {
-        setLoading(false);
+      const singlePost = await getPostById(idParam);
+      setResource(singlePost);
+
+      if (singlePost?.category && singlePost?.id) {
+        const related = await getRelatedPosts(
+          singlePost.category,
+          singlePost.id
+        );
+        setRelatedResources(related);
       }
-    };
-    fetchData();
+    } catch (error) {
+      console.error("Failed to fetch resource:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchResource();
   }, [params.id]);
 
   if (loading) {
@@ -178,8 +187,12 @@ export default function ResourceDetailPage() {
                       {resource.type}
                     </span>
                   </div>
-                  <div className="flex items-center">
-                    <Star size={16} className="text-amber-500 fill-current" />
+                  {/* MODIFICATION: Display the average rating and count */}
+                  <div className="flex items-center gap-2">
+                    <StarRatingDisplay rating={resource.averageRating || 0} />
+                    <span className="text-sm secondary-text">
+                      ({resource.reviewCount || 0} reviews)
+                    </span>
                   </div>
                 </div>
                 <h1 className="text-3xl font-bold primary-text mb-4">
@@ -267,6 +280,12 @@ export default function ResourceDetailPage() {
                 </h3>
               </div>
             </div>
+
+            {/* NEW: Add the Review Form and Review List components */}
+            {/* You might want to wrap this in a check to see if a user is logged in */}
+            <ReviewForm resourceId={resource.id} onReviewSubmit={fetchResource} />
+            <ReviewsList resourceId={resource.id} />
+
           </div>
           <div className="lg:col-span-1">
             <div className="card-bg rounded-xl shadow-lg p-6 sticky top-6">
@@ -298,10 +317,8 @@ export default function ResourceDetailPage() {
                           {related.category}
                         </p>
                         <div className="flex items-center mt-1">
-                          <Star
-                            size={12}
-                            className="text-amber-500 fill-current"
-                          />
+                          {/* Here we can use the new display component for related items too! */}
+                          <StarRatingDisplay rating={related.averageRating || 0} />
                           <span className="mx-2 text-gray-300">•</span>
                           <Download size={12} className="text-gray-500" />
                           <span className="text-xs text-gray-500 ml-1">
