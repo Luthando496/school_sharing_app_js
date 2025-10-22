@@ -221,7 +221,7 @@ export default function ResourcesPage() {
                     <h3 className="text-xl font-bold text-gray-800 mb-2">
                       {resource.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-4">
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-5">
                       {resource.description}
                     </p>
 

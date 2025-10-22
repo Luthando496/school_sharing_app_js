@@ -473,7 +473,7 @@ export default function UploadPage() {
               <button
                 type="submit"
                 disabled={isUploading}
-                className="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-lg font-medium rounded-md text-white bg-accent hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-dark transition-colors duration-200 disabled:opacity-50"
+                className="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-lg font-medium bg-green-600 rounded-md text-gray-700 bg-accent hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-dark transition-colors duration-200 disabled:opacity-50"
               >
                 {isUploading ? (
                   <>
