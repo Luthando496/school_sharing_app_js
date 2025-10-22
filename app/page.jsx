@@ -88,7 +88,7 @@ const MainContent = () => {
         {/* Call to Action Section */}
         <div className="text-center py-16 px-6 rounded-lg bg-secondary shadow-lg">
           <h3 className="text-3xl font-bold mb-4 primary-text">
-            Can't Find What You're Looking For?
+            Can not Find What You're Looking For?
           </h3>
           <p className="text-lg mb-8 secondary-text">
             Or perhaps you have something great to share with the community!

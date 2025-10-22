@@ -16,7 +16,7 @@ export default function NotFound() {
           Page Not Found
         </p>
         <p className="mt-2 text-gray-500">
-          Oops! The page you are looking for doesn't exist. It might have been moved or deleted.
+          Oops! The page you are looking for does not exist. It might have been moved or deleted.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <GoBackButton />
