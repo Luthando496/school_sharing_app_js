@@ -35,7 +35,7 @@ export default async function BlogsPage() {
 
         <div className="text-center mb-12">
           <Link
-            href="/create-blogs"
+            href="/blogs/create-blog"
             className="inline-flex items-center gap-2 bg-purple-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
           >
             <Pencil size={18} />
