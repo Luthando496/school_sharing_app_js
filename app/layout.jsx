@@ -20,6 +20,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 const currentYear = new Date().getFullYear();
 
 export default function RootLayout({ children }) {
